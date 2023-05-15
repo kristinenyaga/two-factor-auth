@@ -13,19 +13,19 @@ services:
       - 3000:3000
     depends_on: 
       - mongodb
-    environment: 
-      MONGO_URI: mongodb://${MONGO_ROOT_USERNAME}:${MONGO_ROOT_PASSWORD}@mongodb
+    env_file:
+      ./.env
 
   mongodb:
     image: mongo
     restart: always
     ports:
-      - 27077:27077  
+      - 27017:27017  
     environment: 
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin123456
     volumes: 
-      - mongodb-data:/data/db
+      - mongodb-data:/database/db
  
 
   mongo-express:
@@ -42,9 +42,8 @@ services:
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: admin123456
     volumes:
-      - mongodb-data  
-    
-        
+      - mongodb-data:/database/db 
+
 volumes:
   mongodb-data:
     driver: local
